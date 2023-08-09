@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
-const chatSchema = new mongoose.Schema({
+const noteSchema = new mongoose.Schema({
     content: String,
     username: String,
 }, { timestamps: true });
 
 // create model
-const Messages = mongoose.model('Messages', chatSchema);
+const Note = mongoose.model('Note', noteSchema);
 
-module.exports = Messages;
+module.exports = Note;
