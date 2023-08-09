@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
         state: String,
         zipCode: Number
     },
-    number: String
+    number: String,
+    gender: String,
 }, { timestamps: true });
 
 // create model

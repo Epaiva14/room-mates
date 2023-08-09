@@ -12,7 +12,7 @@ app.use(cors());
 app.use(passport.initialize());
 
 app.get('/', (req, res) => {
-    return res.json({ message: 'Welcome to my API' });
+    return res.json({ message: 'Welcome Room-Mates! :D' });
 });
 
 app.use('/posts', require('./controllers/posts'));

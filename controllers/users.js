@@ -70,58 +70,58 @@ router.get('/:field/:value', (req, res) => {
 router.post('/signup', (req, res) => {
     // POST - adding the new user to the database
     console.log('===> Inside of /signup');
-    console.log('===> /register -> req.body',req.body);
+    console.log('===> /register -> req.body', req.body);
 
     User.findOne({ email: req.body.email })
-    .then(user => {
-        // if email already exists, a user will come back
-        if (user) {
-            // send a 400 response
-            return res.status(400).json({ message: 'Email already exists' });
-        } else {
-            // Create a new user
-            const newUser = new User({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email,
-                jobTitle: req.body.jobTitle,
-                birthdate: new Date(),
-                "address.streetAddress": req.body.streetAddress,
-                "address.city": req.body.city,
-                "address.state": req.body.state,
-                "address.zipCode": req.body.zipCode,
-                number: req.body.number,
-                password: req.body.password
-            });
+        .then(user => {
+            // if email already exists, a user will come back
+            if (user) {
+                // send a 400 response
+                return res.status(400).json({ message: 'Email already exists' });
+            } else {
+                // Create a new user
+                const newUser = new User({
+                    firstName: req.body.firstName,
+                    lastName: req.body.lastName,
+                    email: req.body.email,
+                    jobTitle: req.body.jobTitle,
+                    birthdate: new Date(),
+                    "address.streetAddress": req.body.streetAddress,
+                    "address.city": req.body.city,
+                    "address.state": req.body.state,
+                    "address.zipCode": req.body.zipCode,
+                    number: req.body.number,
+                    password: req.body.password
+                });
 
-            // Salt and hash the password - before saving the user
-            bcrypt.genSalt(10, (err, salt) => {
-                if (err) throw Error;
+                // Salt and hash the password - before saving the user
+                bcrypt.genSalt(10, (err, salt) => {
+                    if (err) throw Error;
 
-                bcrypt.hash(newUser.password, salt, (err, hash) => {
-                    if (err) console.log('==> Error inside of hash', err);
-                    // Change the password in newUser to the hash
-                    newUser.password = hash;
-                    newUser.save()
-                    .then(createdUser => {
-                        // remove password from being returned inside of response, still in DB
-                        if (createdUser.password) {
-                            createdUser.password = '...' // hide the password
-                            res.json({ user: createdUser });
-                        }
-                    })
-                    .catch(err => {
-                        console.log('error with creating new user', err);
-                        res.json({ message: 'Error occured... Please try again.'});
+                    bcrypt.hash(newUser.password, salt, (err, hash) => {
+                        if (err) console.log('==> Error inside of hash', err);
+                        // Change the password in newUser to the hash
+                        newUser.password = hash;
+                        newUser.save()
+                            .then(createdUser => {
+                                // remove password from being returned inside of response, still in DB
+                                if (createdUser.password) {
+                                    createdUser.password = '...' // hide the password
+                                    res.json({ user: createdUser });
+                                }
+                            })
+                            .catch(err => {
+                                console.log('error with creating new user', err);
+                                res.json({ message: 'Error occured... Please try again.' });
+                            });
                     });
                 });
-            });
-        }
-    })
-    .catch(err => { 
-        console.log('Error finding user', err);
-        res.json({ message: 'Error occured... Please try again.'})
-    })
+            }
+        })
+        .catch(err => {
+            console.log('Error finding user', err);
+            res.json({ message: 'Error occured... Please try again.' })
+        })
 });
 
 router.post('/login', async (req, res) => {
@@ -153,7 +153,7 @@ router.post('/login', async (req, res) => {
 
             jwt.sign(payload, JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
                 if (err) {
-                    res.status(400).json({ message: 'Session has endedd, please log in again'});
+                    res.status(400).json({ message: 'Session has endedd, please log in again' });
                 }
                 const legit = jwt.verify(token, JWT_SECRET, { expiresIn: 60 });
                 console.log('===> legit', legit);
@@ -251,35 +251,37 @@ router.put('/:id', (req, res) => {
     }
     // check zipCode
     if (req.body.zipCode) {
-        updateQuery["address.zipCode"]  = req.body.zipCode
+        updateQuery["address.zipCode"] = req.body.zipCode
     }
     // check number
     if (req.body.number) {
         updateQuery.number = req.body.number
     }
 
-    User.findByIdAndUpdate(req.params.id, {$set: updateQuery }, {new: true})
-    .then((user) => {
-        return res.json({ message: `${user.email} was updated`, user: user});
-    })
-    .catch((error) => {
-        console.log('error inside PUT /users/:id', error);
-        return res.json({ message: 'error occured, please try again.' });
-    });
+    User.findByIdAndUpdate(req.params.id, { $set: updateQuery }, { new: true })
+        .then((user) => {
+            return res.json({ message: `${user.email} was updated`, user: user });
+        })
+        .catch((error) => {
+            console.log('error inside PUT /users/:id', error);
+            return res.json({ message: 'error occured, please try again.' });
+        });
 });
 
 
 // DELETE route for /users/:id
 router.delete('/:id', (req, res) => {
-    
+
     User.findByIdAndDelete(req.params.id)
-    .then((result) => {
-        return res.json({ message: `user at ${req.params.id} was delete`});
-    })
-    .catch((error) => {
-        console.log('error inside DELETE /users/:id', error);
-        return res.json({ message: 'error occured, please try again.' });
-    });
+        .then((result) => {
+            return res.json({ message: `user at ${req.params.id} was delete` });
+        })
+        .catch((error) => {
+            console.log('error inside DELETE /users/:id', error);
+            return res.json({ message: 'error occured, please try again.' });
+        });
 });
+
+
 
 module.exports = router;
