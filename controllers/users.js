@@ -31,12 +31,12 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), (req, r
     console.log(req.body);
     console.log('====> user')
     console.log(req.user);
-    const { id, firstName, lastName, email, address, jobTitle, birthdate, number } = req.user; // object with user object inside
-    res.json({ id, firstName, lastName, email, address, jobTitle, birthdate, number, });
+    const { id, firstName, lastName, email, address, jobTitle, birthdate, number, gender } = req.user; // object with user object inside
+    res.json({ id, firstName, lastName, email, address, jobTitle, birthdate, number, gender });
 });
 
 // other routes below
-// GET make a route that queries users by [email domain] [zipCode] [state]
+// GET make a route that queries users by [email domain] [zipCode] [gender] [jobTitle] [lastName]
 router.get('/:field/:value', (req, res) => {
     if (req.params.field === 'zipcode' || req.params.field === 'zipCode') {
         let zipCode = parseInt(req.params.value);
@@ -64,7 +64,32 @@ router.get('/:field/:value', (req, res) => {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.json({ message: 'There was an issue, please try again...' });
             });
+    } else if (req.params.field === 'jobTitle' || req.params.field === 'JobTitle') {
+        User.find({ jobTitle: req.params.value })
+            .then((users) => {
+                console.log('users', users);
+                res.header("Access-Control-Allow-Origin", "*");
+                return res.json({ users: users });
+            })
+            .catch((error) => {
+                console.log('error', error);
+                res.header("Access-Control-Allow-Origin", "*");
+                res.json({ message: 'There was an issue, please try again...' });
+            });
+    } else if (req.params.field === 'lastName' || req.params.field === 'LastName') {
+        User.find({ lastName: req.params.value })
+            .then((users) => {
+                console.log('users', users);
+                res.header("Access-Control-Allow-Origin", "*");
+                return res.json({ users: users });
+            })
+            .catch((error) => {
+                console.log('error', error);
+                res.header("Access-Control-Allow-Origin", "*");
+                res.json({ message: 'There was an issue, please try again...' });
+            });
     }
+
 });
 
 router.post('/signup', (req, res) => {
@@ -91,7 +116,8 @@ router.post('/signup', (req, res) => {
                     "address.state": req.body.state,
                     "address.zipCode": req.body.zipCode,
                     number: req.body.number,
-                    password: req.body.password
+                    password: req.body.password,
+                    gender: req.body.gender
                 });
 
                 // Salt and hash the password - before saving the user
@@ -148,7 +174,8 @@ router.post('/login', async (req, res) => {
                 address: foundUser.address,
                 birthdate: foundUser.birthdate,
                 jobTitle: foundUser.jobTitle,
-                number: foundUser.number
+                number: foundUser.number,
+                gender: foundUser.gender
             }
 
             jwt.sign(payload, JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
@@ -194,7 +221,8 @@ router.post('/new', (req, res) => {
                     "address.state": req.body.state,
                     "address.zipCode": req.body.zipCode,
                     number: req.body.number,
-                    password: req.body.password
+                    password: req.body.password,
+                    gender: req.body.gender
                 })
                     .then((newUser) => {
                         console.log('new user created ->', newUser);
@@ -256,6 +284,14 @@ router.put('/:id', (req, res) => {
     // check number
     if (req.body.number) {
         updateQuery.number = req.body.number
+    }
+    // check gender
+    if (req.body.gender) {
+        updateQuery.gender = req.body.gender
+    }
+    // check password
+    if (req.body.password) {
+        updateQuery.password = req.body.password
     }
 
     User.findByIdAndUpdate(req.params.id, { $set: updateQuery }, { new: true })

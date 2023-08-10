@@ -59,6 +59,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
     console.log('POST route to create a roomDetail');
     console.log('req.body', req.body);
     console.log('req.user', req.user);
+
     RoomDetail.create({
         name: req.body.name,
         address: req.body.address,
@@ -71,6 +72,35 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
         .then(roomDetail => {
             console.log('roomDetail', roomDetail);
             return res.json({ roomDetail });
+        })
+        .catch(error => {
+            console.log('error', error);
+            return res.json({ message: 'this is an issue, please try again' });
+        });
+});
+
+router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+    const updateQuery = {}
+    const updateableFields = ['name', 'roommates']
+
+    updateableFields.forEach(field => {
+        if (field in req.body) {
+            updateQuery[field] = req.body[field]
+        }
+    })
+});
+
+// DELETE route to delete a roomDetail
+router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+
+    RoomDetail.findByIdAndDelete(req.params.id)
+        .then(roomDetail => {
+            if (!roomDetail) {
+                console.log('roomDetail cannot be found');
+                return res.json({ message: 'roomDetail cannot be found' });
+            }
+            // return the roomDetail to the user
+            return res.json({ roomDetail }); // res.json({ roomDetail: roomDetail })
         })
         .catch(error => {
             console.log('error', error);
