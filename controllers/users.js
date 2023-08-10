@@ -32,7 +32,7 @@ router.get('/profile', passport.authenticate('jwt', { session: false }), (req, r
     console.log('====> user')
     console.log(req.user);
     const { id, firstName, lastName, email, address, jobTitle, birthdate, number } = req.user; // object with user object inside
-    res.json({ id, firstName, lastName, email, address, jobTitle, birthdate, number });
+    res.json({ id, firstName, lastName, email, address, jobTitle, birthdate, number, });
 });
 
 // other routes below

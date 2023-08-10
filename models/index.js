@@ -4,9 +4,11 @@ const mongoose = require('mongoose');
 // import all models
 const User = require('./user');
 const Chat = require('./chatMessage');
-
-
-
+const RoomDetail = require('./roomDetail');
+const CalendarEvent = require('./calendarEvent');
+const Chore = require('./chore');
+const ShoppingList = require('./shoppingList');
+const Note = require('./note');
 
 console.log('mongo uri =>', process.env.MONGO_URI);
 
@@ -32,5 +34,9 @@ db.on('error', (err) => {
 module.exports = {
     User,
     Chat,
-
+    RoomDetail,
+    CalendarEvent,
+    Chore,
+    ShoppingList,
+    Note
 }

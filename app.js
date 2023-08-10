@@ -17,6 +17,13 @@ app.get('/', (req, res) => {
 
 app.use('/posts', require('./controllers/posts'));
 app.use('/users', require('./controllers/users'));
+app.use('/chat', require('./controllers/chatMessages'));
+app.use('/calendar', require('./controllers/calendarEvents'));
+app.use('/chores', require('./controllers/chores'));
+app.use('/shoppingList', require('./controllers/shoppingList'));
+app.use('/notes', require('./controllers/notes'));
+app.use('/roomDetail', require('./controllers/roomDetail'));
+
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => {
