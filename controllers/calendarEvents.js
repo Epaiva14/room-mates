@@ -10,7 +10,7 @@ const { JWT_SECRET } = process.env;
 const { CalendarEvent } = require('../models');
 
 // GET route for /calendarEvent
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/', (req, res) => {
     CalendarEvent.find({})
         .then(calendarEvent => {
             if (calendarEvent) {
@@ -26,14 +26,14 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
 });
 
 // private
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('====> inside /calendarEvent/profile');
-    console.log(req.body);
-    console.log('====> calendarEvent')
-    console.log(req.user);
-    const { id, name, email } = req.user; // object with user object inside
-    res.json({ success: true, user: req.user });
-});
+// router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+//     console.log('====> inside /calendarEvent/profile');
+//     console.log(req.body);
+//     console.log('====> calendarEvent')
+//     console.log(req.user);
+//     const { id, name, email } = req.user; // object with user object inside
+//     res.json({ success: true, user: req.user });
+// });
 
 // GET route to find the calendarEvent
 router.get('/:id', (req, res) => {
@@ -55,7 +55,7 @@ router.get('/:id', (req, res) => {
 });
 
 // POST route to create a calendarEvent
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/', (req, res) => {
     console.log('POST route to create a calendarEvent');
     console.log('req.body', req.body);
     // create a calendarEvent
@@ -72,9 +72,9 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 });
 
 // PUT route to update a calendarEvent
-router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/:id', (req, res) => {
     const updateQuery = {}
-    const updateableFields = ['title', 'start', 'end', 'allDay', 'resource']
+    const updateableFields = ['title', 'start', 'end', 'allDay', 'description']
 
     updateableFields.forEach(field => {
         if (field in req.body) {
@@ -84,7 +84,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 // DELETE route to delete a calendarEvent
-router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/:id', (req, res) => {
     console.log('route to delete a calendarEvent', req.params); // { id: 'aklsdjfkalsd', commentId: 'aldmsfaldkmfalkmdf' }
     // find the calendarEvent
     CalendarEvent.findByIdAndDelete(req.params.id)

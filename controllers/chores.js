@@ -10,7 +10,7 @@ const { JWT_SECRET } = process.env;
 const { Chore } = require('../models');
 
 // GET route for /chore
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/', (req, res) => {
     Chore.find({})
         .then(chore => {
             if (chore) {
@@ -25,15 +25,15 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
         });
 });
 
-// private
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('====> inside /chore/profile');
-    console.log(req.body);
-    console.log('====> chore')
-    console.log(req.user);
-    const { id, name, email } = req.user; // object with user object inside
-    res.json({ success: true, user: req.user });
-});
+// // private
+// router.get('/profile', (req, res) => {
+//     console.log('====> inside /chore/profile');
+//     console.log(req.body);
+//     console.log('====> chore')
+//     console.log(req.user);
+//     const { id, name, email } = req.user; // object with user object inside
+//     res.json({ success: true, user: req.user });
+// });
 
 // GET route to find the chore
 router.get('/:id', (req, res) => {
@@ -55,11 +55,11 @@ router.get('/:id', (req, res) => {
 });
 
 // POST route to create a chore
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/', (req, res) => {
     console.log('POST route to create a chore');
     console.log('req.body', req.body);
-    const { name, description, dueDate, completed } = req.body;
-    Chore.create({ name, description, dueDate, completed })
+    const { chore, roomDetail, creator, assignee, completed, dueDate } = req.body;
+    Chore.create({ chore, roomDetail, creator, assignee, completed, dueDate })
         .then(chore => {
             return res.json({ chore });
         })
@@ -70,9 +70,9 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 });
 
 // PUT route to update a chore
-router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/:id', (req, res) => {
     const updateQuery = {}
-    const updateableFields = ['name', 'description', 'dueDate', 'completed']
+    const updateableFields = ["chore", "assignee", "completed", "dueDate"]
 
     updateableFields.forEach(field => {
         if (field in req.body) {
@@ -82,7 +82,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 // DELETE route to delete a chore
-router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/:id', (req, res) => {
     console.log('DELETE route to delete a chore');
     console.log('req.params', req.params);
     Chore.findByIdAndDelete(req.params.id)

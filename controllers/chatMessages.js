@@ -7,16 +7,16 @@ const passport = require('passport');
 const { JWT_SECRET } = process.env;
 
 // import the chatMessage model
-const { ChatMessage } = require('../models');
+const { Chat } = require('../models');
 
-// GET route for /chatMessage
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    ChatMessage.find({})
-        .then(chatMessage => {
-            if (chatMessage) {
-                return res.json({ chatMessage: chatMessage });
+// GET route for /chat
+router.get('/', (req, res) => {
+    Chat.find({})
+        .then(chat => {
+            if (chat) {
+                return res.json({ chat: chat });
             } else {
-                return res.json({ message: 'No chatMessage exists' });
+                return res.json({ message: 'No chat exists' });
             }
         })
         .catch(error => {
@@ -26,25 +26,25 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
 });
 
 // private
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('====> inside /chatMessage/profile');
-    console.log(req.body);
-    console.log('====> chatMessage')
-    console.log(req.user);
-    const { id, name, email } = req.user; // object with user object inside
-    res.json({ success: true, user: req.user });
-});
+// router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+//     console.log('====> inside /chat/profile');
+//     console.log(req.body);
+//     console.log('====> chat')
+//     console.log(req.user);
+//     const { id, name, email } = req.user; // object with user object inside
+//     res.json({ success: true, user: req.user });
+// });
 
-// GET route to find the chatMessage
+// GET route to find the chat
 router.get('/:id', (req, res) => {
-    ChatMessage.findById(req.params.id)
-        .then(chatMessage => {
-            if (!chatMessage) {
-                console.log('chatMessage cannot be found');
-                return res.json({ message: 'chatMessage cannot be found' });
+    Chat.findById(req.params.id)
+        .then(chat => {
+            if (!chat) {
+                console.log('chat cannot be found');
+                return res.json({ message: 'chat cannot be found' });
             }
-            // return the chatMessage to the user
-            return res.json({ chatMessage }); // res.json({ chatMessage: chatMessage })
+            // return the chat to the user
+            return res.json({ chat }); // res.json({ chat: chat })
         })
         .catch(error => {
             console.log('error', error);
@@ -52,15 +52,15 @@ router.get('/:id', (req, res) => {
         });
 });
 
-// POST route to create a chatMessage
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('POST route to create a chatMessage');
+// POST route to create a chat
+router.post('/', (req, res) => {
+    console.log('POST route to create a chat');
     console.log('req.body', req.body);
-    const { message } = req.body;
-    ChatMessage.create({ message })
-        .then(chatMessage => {
-            console.log('chatMessage', chatMessage);
-            return res.json({ chatMessage });
+    const { content, creator } = req.body;
+    Chat.create({ content, creator })
+        .then(chat => {
+            console.log('chat', chat);
+            return res.json({ chat });
         })
         .catch(error => {
             console.log('error', error);
@@ -69,22 +69,22 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 }
 );
 
-// PUT route to update a chatMessage
-router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+// PUT route to update a chat
+router.put('/:id', (req, res) => {
     const updateQuery = {}
-    const updateableFields = ['message'];
+    const updateableFields = ['content'];
     updateableFields.forEach(field => {
         if (field in req.body) {
             updateQuery[field] = req.body[field];
         }
     })
-    ChatMessage.findByIdAndUpdate(req.params.id, { $set: updateQuery }, { new: true })
-        .then(chatMessage => {
-            if (!chatMessage) {
-                console.log('chatMessage cannot be found');
-                return res.json({ message: 'chatMessage cannot be found' });
+    Chat.findByIdAndUpdate(req.params.id, { $set: updateQuery }, { new: true })
+        .then(chat => {
+            if (!chat) {
+                console.log('chat cannot be found');
+                return res.json({ message: 'chat cannot be found' });
             }
-            return res.json({ chatMessage });
+            return res.json({ chat });
         })
         .catch(error => {
             console.log('error', error);
@@ -92,15 +92,15 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) 
         });
 });
 
-// DELETE route to delete a chatMessage
-router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
-    ChatMessage.findByIdAndRemove(req.params.id)
-        .then(chatMessage => {
-            if (!chatMessage) {
-                console.log('chatMessage cannot be found');
-                return res.json({ message: 'chatMessage cannot be found' });
+// DELETE route to delete a chat
+router.delete('/:id', (req, res) => {
+    Chat.findByIdAndRemove(req.params.id)
+        .then(chat => {
+            if (!chat) {
+                console.log('chat cannot be found');
+                return res.json({ message: 'chat cannot be found' });
             }
-            return res.json({ chatMessage });
+            return res.json({ chat });
         })
         .catch(error => {
             console.log('error', error);
