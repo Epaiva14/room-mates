@@ -15,7 +15,6 @@ app.get('/', (req, res) => {
     return res.json({ message: 'Welcome Room-Mates! :D' });
 });
 
-app.use('/posts', require('./controllers/posts'));
 app.use('/users', require('./controllers/users'));
 app.use('/chat', require('./controllers/chatMessages'));
 app.use('/calendar', require('./controllers/calendarEvents'));

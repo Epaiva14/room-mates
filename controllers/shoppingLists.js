@@ -9,8 +9,10 @@ const { JWT_SECRET } = process.env;
 // import the shoppingList model
 const { ShoppingList } = require('../models');
 
+// passport.authenticate('jwt', { session: false }),
+
 // GET route for /shoppingList
-router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.get('/', (req, res) => {
     ShoppingList.find({})
         .then(shoppingList => {
             if (shoppingList) {
@@ -26,14 +28,14 @@ router.get('/', passport.authenticate('jwt', { session: false }), (req, res) => 
 });
 
 // private
-router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
-    console.log('====> inside /shoppingList/profile');
-    console.log(req.body);
-    console.log('====> shoppingList')
-    console.log(req.user);
-    const { id, name, email } = req.user; // object with user object inside
-    res.json({ success: true, user: req.user });
-});
+// router.get('/profile', passport.authenticate('jwt', { session: false }), (req, res) => {
+//     console.log('====> inside /shoppingList/profile');
+//     console.log(req.body);
+//     console.log('====> shoppingList')
+//     console.log(req.user);
+//     const { id, name, email } = req.user; // object with user object inside
+//     res.json({ success: true, user: req.user });
+// });
 
 // GET route to find the shoppingList
 router.get('/:id', (req, res) => {
@@ -55,11 +57,11 @@ router.get('/:id', (req, res) => {
 });
 
 // POST route to create a shoppingList
-router.post('/', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.post('/', (req, res) => {
     console.log('POST route to create a shoppingList');
     console.log('req.body', req.body);
-    const { name, description, items } = req.body;
-    ShoppingList.create({ name, description, items })
+    const { creator, quantity, items, roomDetail } = req.body;
+    ShoppingList.create({ creator, quantity, items, roomDetail })
         .then(shoppingList => {
             console.log('shoppingList', shoppingList);
             return res.json({ shoppingList });
@@ -72,7 +74,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), (req, res) =>
 );
 
 // PUT route to update a shoppingList
-router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.put('/:id', (req, res) => {
     console.log('PUT route to update a shoppingList');
     console.log('req.body', req.body);
     console.log('req.params', req.params);
@@ -89,7 +91,7 @@ router.put('/:id', passport.authenticate('jwt', { session: false }), (req, res) 
 });
 
 // DELETE route to delete a shoppingList
-router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, res) => {
+router.delete('/:id', (req, res) => {
     console.log('DELETE route to delete a shoppingList');
     console.log('req.params', req.params);
     ShoppingList.findByIdAndDelete(req.params.id)
