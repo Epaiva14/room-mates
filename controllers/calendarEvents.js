@@ -101,3 +101,5 @@ router.delete('/:id', passport.authenticate('jwt', { session: false }), (req, re
             return res.json({ message: 'this is an issue, please try again' });
         });
 });
+
+module.exports = router;
