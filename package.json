@@ -1,5 +1,5 @@
 {
-  "name": "mongoose-app",
+  "name": "roommates-api-app",
   "version": "1.0.0",
   "description": "Create Express API using Mongoose and more ...",
   "main": "app.js",
