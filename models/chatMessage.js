@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 
 const chatSchema = new mongoose.Schema({
     content: String,
-    username: String,
-}, { timestamps: true });
+    creator: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
+},
+    { timestamps: true });
 
 // create model
 const Chat = mongoose.model('Chat', chatSchema);
