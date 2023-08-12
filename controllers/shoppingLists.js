@@ -60,8 +60,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     console.log('POST route to create a shoppingList');
     console.log('req.body', req.body);
-    const { creator, quantity, items, roomDetail } = req.body;
-    ShoppingList.create({ creator, quantity, items, roomDetail })
+    const { creator, quantity, item, roomDetail } = req.body;
+    ShoppingList.create({ creator, quantity, item, roomDetail })
         .then(shoppingList => {
             console.log('shoppingList', shoppingList);
             return res.json({ shoppingList });
@@ -78,8 +78,8 @@ router.put('/:id', (req, res) => {
     console.log('PUT route to update a shoppingList');
     console.log('req.body', req.body);
     console.log('req.params', req.params);
-    const { name, description, items } = req.body;
-    ShoppingList.findByIdAndUpdate(req.params.id, { name, description, items }, { new: true })
+    const { item, quantity, creator } = req.body;
+    ShoppingList.findByIdAndUpdate(req.params.id, { item, quantity, creator }, { new: true })
         .then(shoppingList => {
             console.log('shoppingList', shoppingList);
             return res.json({ shoppingList });
@@ -97,7 +97,7 @@ router.delete('/:id', (req, res) => {
     ShoppingList.findByIdAndDelete(req.params.id)
         .then(shoppingList => {
             console.log('shoppingList', shoppingList);
-            return res.json({ shoppingList });
+            return res.json({ message: `${shoppingList} has been deleted` });
         })
         .catch(error => {
             console.log('error', error);

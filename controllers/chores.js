@@ -11,7 +11,7 @@ const { Chore } = require('../models');
 
 // GET route for /chore
 router.get('/', (req, res) => {
-    Chore.find({})
+    Chore.find({}).populate('creator').populate('assignee')
         .then(chore => {
             if (chore) {
                 return res.json({ chore: chore });
@@ -71,14 +71,19 @@ router.post('/', (req, res) => {
 
 // PUT route to update a chore
 router.put('/:id', (req, res) => {
-    const updateQuery = {}
-    const updateableFields = ["chore", "assignee", "completed", "dueDate"]
-
-    updateableFields.forEach(field => {
-        if (field in req.body) {
-            updateQuery[field] = req.body[field]
-        }
-    })
+    // update chore, assignee, completed, dueDate, creator
+    console.log('PUT route to update a chore');
+    console.log('req.body', req.body);
+    const { chore, roomDetail, creator, assignee, completed, dueDate } = req.body;
+    Chore.updateOne({ _id: req.params.id }, { chore, roomDetail, creator, assignee, completed, dueDate })
+        .then(chore => {
+            req.body = chore;
+            return res.json({ message: `${chore} has been updated` });
+        })
+        .catch(error => {
+            console.log('error', error);
+            return res.json({ message: 'this is an issue, please try again' });
+        });
 });
 
 // DELETE route to delete a chore
@@ -92,7 +97,7 @@ router.delete('/:id', (req, res) => {
                 return res.json({ message: 'chore cannot be found' });
             }
             // return the chore to the user
-            return res.json({ chore }); // res.json({ chore: chore })
+            return res.json({ message: `${chore} has been deleted` }); // res.json({ chore: chore })
         })
         .catch(error => {
             console.log('error', error);
