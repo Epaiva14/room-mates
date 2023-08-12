@@ -11,7 +11,7 @@ const { Note } = require('../models');
 
 // GET route for /note
 router.get('/', (req, res) => {
-    Note.find({})
+    Note.find({}).populate('creator')
         .then(note => {
             if (note) {
                 return res.json({ note: note });
