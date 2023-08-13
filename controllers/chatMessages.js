@@ -7,7 +7,8 @@ const passport = require('passport');
 const { JWT_SECRET } = process.env;
 
 // import the chatMessage model
-const { Chat } = require('../models');
+const { Chat, ChatRoom } = require('../models');
+
 
 // GET route for /chat
 router.get('/', (req, res) => {
@@ -53,21 +54,33 @@ router.get('/:id', (req, res) => {
 });
 
 // POST route to create a chat
+// POST route to create a chat message
 router.post('/', (req, res) => {
     console.log('POST route to create a chat');
     console.log('req.body', req.body);
-    const { content, creator } = req.body;
-    Chat.create({ content, creator })
+    const { content, recipient, sender, chatRoom } = req.body;
+
+    Chat.create({ content, recipient, sender, chatRoom })
         .then(chat => {
             console.log('chat', chat);
-            return res.json({ chat });
+
+            // Update the chat room with the newly created message
+            ChatRoom.findByIdAndUpdate(chatRoom, { $push: { messages: chat._id } }, { new: true })
+                .then(updatedChatRoom => {
+                    console.log('updatedChatRoom', updatedChatRoom);
+
+                    return res.json({ chat, chatRoom: updatedChatRoom });
+                })
+                .catch(error => {
+                    console.log('error updating chat room', error);
+                    return res.json({ message: 'this is an issue, please try again' });
+                });
         })
         .catch(error => {
             console.log('error', error);
             return res.json({ message: 'this is an issue, please try again' });
         });
-}
-);
+});
 
 // PUT route to update a chat
 router.put('/:id', (req, res) => {
