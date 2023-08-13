@@ -22,6 +22,7 @@ app.use('/chores', require('./controllers/chores'));
 app.use('/shoppingList', require('./controllers/shoppingLists'));
 app.use('/notes', require('./controllers/notes'));
 app.use('/roomDetail', require('./controllers/roomDetails'));
+app.use('/chatRoom', require('./controllers/chatRooms'));
 
 
 const PORT = process.env.PORT || 8000;

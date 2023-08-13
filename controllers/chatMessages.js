@@ -11,7 +11,7 @@ const { Chat } = require('../models');
 
 // GET route for /chat
 router.get('/', (req, res) => {
-    Chat.find({})
+    Chat.find({}).populate('sender').populate('recipient')
         .then(chat => {
             if (chat) {
                 return res.json({ chat: chat });
@@ -100,7 +100,7 @@ router.delete('/:id', (req, res) => {
                 console.log('chat cannot be found');
                 return res.json({ message: 'chat cannot be found' });
             }
-            return res.json({ chat });
+            return res.json({ message: `${chat} has been deleted` });
         })
         .catch(error => {
             console.log('error', error);
