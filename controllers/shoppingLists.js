@@ -13,7 +13,7 @@ const { ShoppingList } = require('../models');
 
 // GET route for /shoppingList
 router.get('/', (req, res) => {
-    ShoppingList.find({})
+    ShoppingList.find({}).populate('creator')
         .then(shoppingList => {
             if (shoppingList) {
                 return res.json({ shoppingList: shoppingList });

@@ -13,6 +13,7 @@ const { Note } = require('../models');
 router.get('/', (req, res) => {
     Note.find({}).populate('creator')
         .then(note => {
+            console.log('Populated note********', note)
             if (note) {
                 return res.json({ note: note });
             } else {
@@ -53,6 +54,7 @@ router.get('/:id', (req, res) => {
             return res.json({ message: 'this is an issue, please try again' });
         });
 });
+
 
 // POST route to create a note
 router.post('/', (req, res) => {
