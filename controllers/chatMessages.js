@@ -11,7 +11,7 @@ const { Chat } = require('../models');
 
 // GET route for /chat
 router.get('/', (req, res) => {
-    Chat.find({}).populate('sender').populate('recipient')
+    Chat.find({}).populate('sender').populate('recipient').populate('chatRoom')
         .then(chat => {
             if (chat) {
                 return res.json({ chat: chat });
