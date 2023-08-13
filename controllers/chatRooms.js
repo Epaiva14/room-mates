@@ -11,7 +11,7 @@ const { ChatRoom } = require('../models');
 
 // GET route for /chatRoom
 router.get('/', (req, res) => {
-    ChatRoom.find({}).populate('creator').populate('recipient')
+    ChatRoom.find({}).populate('creator').populate('recipient').populate('messages')
         .then(chatRoom => {
             if (chatRoom) {
                 return res.json({ chatRoom: chatRoom });
@@ -56,8 +56,8 @@ router.get('/:id', (req, res) => {
 router.post('/', (req, res) => {
     console.log('POST route to create a chatRoom');
     console.log('req.body', req.body);
-    const { content, creator, recipient } = req.body;
-    ChatRoom.create({ content, creator, recipient })
+    const { content, creator, recipient, roomName, roomDetail, members, messages } = req.body;
+    ChatRoom.create({ content, creator, recipient, roomName, roomDetail, members, messages })
         .then(chatRoom => {
             console.log('chatRoom', chatRoom);
             return res.json({ chatRoom });

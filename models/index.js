@@ -9,6 +9,7 @@ const CalendarEvent = require('./calendarEvent');
 const Chore = require('./chore');
 const ShoppingList = require('./shoppingList');
 const Note = require('./note');
+const ChatRoom = require('./chatRoom');
 
 console.log('mongo uri =>', process.env.MONGO_URI);
 
@@ -38,5 +39,6 @@ module.exports = {
     CalendarEvent,
     Chore,
     ShoppingList,
-    Note
+    Note,
+    ChatRoom
 }
