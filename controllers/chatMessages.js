@@ -12,7 +12,7 @@ const { Chat, ChatRoom } = require('../models');
 
 // GET route for /chat
 router.get('/', (req, res) => {
-    Chat.find({}).populate('sender').populate('recipient').populate('chatRoom')
+    Chat.find({}).populate('sender').populate('recipient')
         .then(chat => {
             if (chat) {
                 return res.json({ chat: chat });
