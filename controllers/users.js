@@ -14,7 +14,6 @@ const { User } = require('../models');
 router.get('/', (req, res) => {
     User.find({})
         .then((users) => {
-            console.log('users', users);
             res.header("Access-Control-Allow-Origin", "*");
             res.json({ users: users });
         })
